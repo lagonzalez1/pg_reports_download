@@ -54,3 +54,50 @@ Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+
+```
+
+
+### 2. Env 
+# RabbitMQ
+RABBITMQ_HOST=localhost
+RABBITMQ_QUEUE=generate_materials
+
+# PostgreSQL
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=assessments_db
+DB_USER=myuser
+DB_PASS=mypassword
+
+# AWS
+AWS_ACCESS_KEY_ID=your-key
+AWS_SECRET_ACCESS_KEY=your-secret
+AWS_REGION=us-east-1
+S3_BUCKET=assessment-materials
+
+## Running
+```bash
+    python main.py
+```
+or
+OPTIONAL:
+include postgreSQL image, RabbitMQ image in docker file to build and run
+```bash
+    docker run build .
+```
+
+
+## Example payload from rabbitMQ
+{
+    LocationID  *int64    `json:"location_id"`
+    ProgramID   *int64    `json:"program_id"`
+    SubjectID   *int64    `json:"subject_id"`
+    SemesterID  *int64    `json:"semester_id"`
+    DateStart   time.Time `json:"date"`
+    DateEnd     time.Time `json:"date_end"`
+    SortKey     string    `json:"sort_key"`
+    Entity      *string   `json:"entity"`
+    S3OutputKey *string   `json:"s3_output_key"`
+    DataType    *string   `json:"data_type"`
+}
