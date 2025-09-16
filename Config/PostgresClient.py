@@ -161,11 +161,12 @@ class PostgresClient:
             "ss.first_name,",
             "ss.last_name,",
             "ss.id,",
-            "ast.session_id",
+            "ast.session_id,",
+            "ast.subject_id",
             "FROM stu_tracker.Assessments_students ast",
-            "JOIN stu_tracker.Assessments a ON a.id = ast.assessment_id",
-            "LEFT JOIN stu_tracker.Students ss ON ss.id = ast.student_id",
-            "LEFT JOIN stu_tracker.Sessions sn ON sn.id = ast.session_id",
+            "JOIN stu_tracker.Students ss ON ss.id = ast.student_id",
+            "LEFT JOIN stu_tracker.Assessments a ON a.id = ast.assessment_id",
+            "JOIN stu_tracker.Sessions sn ON sn.id = ast.session_id",
             ""
         ]
         args = []
@@ -191,7 +192,7 @@ class PostgresClient:
             conditions.append("DATE(sn.session_date) >= %s")
             args.append(params.get("date"))
 
-        if params.get("subject_id") and params.get("subject") != "all":
+        if params.get("subject_id") and params.get("subject_id") != "all":
             conditions.append("ast.subject_id = %s")
             args.append(params.get("subject_id"))
         
@@ -229,11 +230,13 @@ class PostgresClient:
             "CASE ",
             "       WHEN ss.subject_id IS NULL THEN 'NA'",
             "       ELSE sj.title",
-            "END AS subject",
+            "END AS subject,",
+            "program_name",
             "FROM stu_tracker.Students s",
-            "LEFT JOIN stu_tracker.Session_students ss ON s.id = ss.student_id",
+            "JOIN stu_tracker.Session_students ss ON s.id = ss.student_id",
             "JOIN stu_tracker.Sessions st ON st.id = ss.session_id",
-            "JOIN stu_tracker.Subjects sj ON sj.id = ss.subject_id",
+            "LEFT JOIN stu_tracker.Subjects sj ON sj.id = ss.subject_id",
+            "LEFT JOIN stu_tracker.Programs pg ON pg.id = st.program_id",
         ]
         args = []
         conditions = []

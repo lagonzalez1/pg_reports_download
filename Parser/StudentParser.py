@@ -59,10 +59,10 @@ class StudentParser:
         file["present"] = file["absent"].apply(lambda x: "P" if not x else "A")
 
         if self.sort_key == GROUP_STUDENTS:
-            pivote_rows = ['id', 'first_name', 'last_name', 'subject']
+            pivote_rows = ['id', 'first_name', 'last_name', 'subject', 'program_name']
             date_range = pd.date_range(file['session_date'].min(), file["session_date"].max(), freq="D")
 
-            file_df = file.groupby(['id', 'first_name', 'last_name', 'subject']).agg(
+            file_df = file.groupby(['id', 'first_name', 'last_name', 'subject', 'program_name']).agg(
                 duration_total=("duration", "sum"),
                 absent_count=("absent", "sum"),
                 present_count=("present", "count")
