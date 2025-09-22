@@ -89,7 +89,7 @@ class PostgresClient:
     def get_tutor_file_data(self, params: dict):
         query = [
             "SELECT "
-            "ss.id,",
+            "ss.id AS session_id,",
             "ss.tutor_id,",
             "ss.session_date,",
             "ss.substitute,",
@@ -100,7 +100,7 @@ class PostgresClient:
             "t.first_name,",
             "t.last_name,",
             "pg.program_name,",
-            "pg.id",
+            "pg.id AS program_id",
             "FROM stu_tracker.Sessions ss",
             "LEFT JOIN stu_tracker.Tutors t ON t.id = ss.tutor_id",
             "LEFT JOIN stu_tracker.Programs pg ON pg.id = ss.program_id",
@@ -148,7 +148,7 @@ class PostgresClient:
     def get_student_assessments(self, params: dict):
         query = [
             "SELECT",
-            "a.title, ",
+            "a.title AS assessment_title, ",
             "a.max_score,",
             "ast.score,"
             "sn.session_date,",
@@ -162,11 +162,13 @@ class PostgresClient:
             "ss.last_name,",
             "ss.id,",
             "ast.session_id,",
-            "ast.subject_id",
+            "ast.subject_id,",
+            "sj.title AS subject_title",
             "FROM stu_tracker.Assessments_students ast",
             "JOIN stu_tracker.Students ss ON ss.id = ast.student_id",
             "LEFT JOIN stu_tracker.Assessments a ON a.id = ast.assessment_id",
             "JOIN stu_tracker.Sessions sn ON sn.id = ast.session_id",
+            "LEFT JOIN stu_tracker.Subjects sj ON sj.id = ast.subject_id",
             ""
         ]
         args = []
@@ -201,6 +203,7 @@ class PostgresClient:
             query.append("WHERE")
             query.append(" AND ".join(conditions))
             qu = " ".join(query)
+            
         else:
             qu = " ".join(query)
         

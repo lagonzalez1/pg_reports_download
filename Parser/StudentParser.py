@@ -37,13 +37,16 @@ class StudentParser:
         if self.isDataEmpty():
             return None
         return self.file
-    
+    ## subject_title
     def parse_assessments(self)->pd.DataFrame:
         if self.isAssessmentDataEmpty():
             return None
         file = pd.DataFrame(self.assessments)
+        cols = ['id','first_name', 'last_name','session_date', 'session_id' ,'assessment_title','subject_title' , 'letter', 'cycle', 'pre', 'mid', 'post', 'version', 'score', 'max_score']
+        file = file[cols]
+
         file['session_date'] = pd.to_datetime(file['session_date']).dt.normalize()
-        file['normalized_score'] = file[['max_score', 'score']].apply(lambda row: (row['score']/row['max_score']) * 100 , axis=1)
+        file['normalized_score'] = file[['max_score', 'score']].apply(lambda row: (row['score']/row['max_score']) * 100 , axis=1).round(2)
         if self.sort_key == GROUP_STUDENTS:
             grouped = file.sort_values(by='id')
             return grouped

@@ -33,11 +33,11 @@ class TutorParser:
         if self.isDataEmpty():
             return None
         file = pd.DataFrame(self.data)
-        columns = ["first_name", "last_name", "id", "tutor_id", "student_count","session_date", "duration", "notes", "program_name" ,"start_time", "substitute"]
+        columns = ["tutor_id", "first_name", "last_name", "session_id", "student_count","session_date", "duration", "notes", "program_name" ,"start_time", "substitute"]
         file = file.reindex(columns=columns)
         file = file.rename(columns={"first_name": "First name",
                                     "last_name": "Last name",
-                                    "id": "Session id",
+                                    "session_id": "Session id",
                                     "tutor_id": "Tutor id",
                                     "student_count": "Student count",
                                     "session_date": "Session date",
@@ -75,7 +75,7 @@ class TutorParser:
             final = pd.merge(
                 df,
                 pivot_table,
-                on=["First name", "Last name", "Tutor id"],
+                on=["Tutor id", "First name", "Last name"],
                 how="inner"
             )
         
